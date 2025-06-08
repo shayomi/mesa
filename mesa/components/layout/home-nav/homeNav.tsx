@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
 
@@ -41,12 +42,23 @@ const HomeNav = () => {
             </Typography>
           </Link>
           <div className="flex flex-row gap-2 ml-12 items-center">
-            <Button
-              variant="default"
-              className="cursor-pointer bg-blue-300 text-black"
-            >
-              Sign In
-            </Button>
+            {/* <Link href="/dashboard">
+              <Button
+                variant="default"
+                className="cursor-pointer bg-blue-300 text-black"
+              >
+                Sign In
+              </Button>
+            </Link> */}
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            <SignedOut>
+              <Button asChild className="rounded-md" variant="default">
+                <Link href="/sign-in">Login</Link>
+              </Button>
+            </SignedOut>
+
             <Button variant="outline" className="cursor-pointer text-blue-500">
               Sign Up
             </Button>
