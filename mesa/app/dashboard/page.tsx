@@ -1,12 +1,14 @@
+import DashboardSection from "@/components/dashboard/Details";
 import Header from "@/components/dashboard/header";
-import SummarySection from "@/components/dashboard/SummarySection";
+
 import React from "react";
 
 const page = () => {
   return (
     <div>
       <Header />
-      <SummarySection />
+      {/* <SummarySection /> */}
+      <DashboardSection />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 
 const Header = () => {
   return (
-    <section className="mt-6 w-2/3">
+    <section className="mt-0 w-full">
       <div className="flex flex-row gap-6 justify-between items-center px-6">
         <Typography variant="h3" className="font-bold text-[#1A283E]">
           TECHNIA DASHBOARD

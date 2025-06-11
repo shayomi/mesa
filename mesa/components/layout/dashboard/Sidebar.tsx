@@ -1,11 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
 import { Home, LayoutDashboard, User, Settings, Menu, X } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
-import { Typography } from "@/components/ui/typography";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -64,17 +62,6 @@ export default function Sidebar() {
 
         {/* Navigation */}
         <nav className="mt-4 flex flex-col gap-1 ">
-          <div className="px-4 flex flex-col gap-4 mb-24 justify-center">
-            <img
-              src="/assets/images/ai-agent.webp"
-              alt="Market Expansion Strategist Agent Screenshot"
-              className="rounded-[100%] border-blue-400 mt-8 w-24 h-24"
-            />
-            <Typography variant="h6" className="font-bold">
-              {" "}
-              Welcome Sayo
-            </Typography>
-          </div>
           {navItems.map(({ name, href, icon: Icon }) => (
             <Link
               key={name}

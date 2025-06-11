@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   } = body;
 
   const prompt = `
-Generate a detailed market expansion strategy for the following company:
+Generate a comprehensive market expansion strategy report for the following company. Each section must be at least 500 words and written in a formal business tone.
 
 Company Name: ${companyName}
 Industry: ${industry}
@@ -29,7 +29,7 @@ Products/Services: ${products}
 Business Goals: ${goals || "N/A"}
 Challenges: ${challenges || "N/A"}
 
-Include:
+Structure the report with the following sections (each clearly labeled and detailed):
 1. Market Overview
 2. Competitive Landscape
 3. Entry Strategies
@@ -39,11 +39,15 @@ Include:
 7. Key Recommendations
 8. PESTLE Analysis
 9. MACS Index
-10. SWOT Analysis
+10. Market Attractiveness Evaluation
+11. Competitive Strength Evaluation
+12. SWOT Analysis
+
+Respond in Markdown-like format with clear headings and spacing.
 `;
 
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model: "gpt-4.1",
     messages: [{ role: "user", content: prompt }],
   });
 
@@ -68,9 +72,9 @@ Include:
 
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
-      "Content-Type": "application/pdf",
+      "Content-Type": "application/docx",
       "Content-Disposition":
-        "attachment; filename=Market-Expansion-Strategy.pdf",
+        "attachment; filename=Market-Expansion-Strategy.docx",
     },
   });
 }

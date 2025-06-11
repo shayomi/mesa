@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <div className="min-h-screen flex">
+      <div className="h-screen flex">
         <Sidebar />
         <main className="flex-1 ml-0 transition-all p-4">{children}</main>
       </div>
