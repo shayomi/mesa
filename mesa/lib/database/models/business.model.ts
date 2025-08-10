@@ -25,17 +25,17 @@ const BusinessSchema = new Schema({
   location: { type: String },
   createdAt: { type: Date, default: Date.now },
   imageUrl: { type: String, required: true },
-  industry: { type: Schema.Types.ObjectId, ref: "industry" },
-  targetAudience: { type: Date, default: Date.now },
+  industry: { type: Schema.Types.ObjectId, ref: "Industry" },
+  targetAudience: { type: String, required: true },
   goals: { type: String, required: true },
   companySize: { type: String, required: true },
   region: { type: Array, required: true },
   painPoint: { type: String },
-  owner: { type: Schema.Types.ObjectId, ref: "user" },
+  owner: { type: Schema.Types.ObjectId, ref: "User" },
   targetMarket: { type: Array, required: true },
 });
 
 const Business =
-  mongoose.models.Business || mongoose.model("Event", BusinessSchema);
+  mongoose.models.Business || mongoose.model("Business", BusinessSchema);
 
 export default Business;

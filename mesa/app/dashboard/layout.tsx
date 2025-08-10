@@ -1,4 +1,3 @@
-// app/layout.tsx or dashboard layout
 "use client";
 
 import { useState } from "react";
@@ -15,46 +14,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className="h-screen overflow-hidden">
-        <div className="flex h-full">
+      <body className="bg-white">
+        {/* Fixed Sidebar */}
+        <div className="fixed inset-y-0 left-0 w-64 z-40">
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <Header onMenuClick={() => setSidebarOpen(true)} />
-            <main className="flex-1 overflow-auto p-4">{children}</main>
-          </div>
         </div>
+
+        {/* Fixed Header */}
+        <div className="fixed top-0 left-64 right-0 h-16 z-30">
+          <Header onMenuClick={() => setSidebarOpen(true)} />
+        </div>
+
+        {/* Scrollable Main Content */}
+        <main className="ml-64 mt-16 h-screen overflow-y-auto px-6 py-12">
+          {children}
+        </main>
       </body>
     </html>
   );
 }
-
-// "use client";
-
-// import { useState } from "react";
-// import Sidebar from "@/components/custom/dashboard/Sidebar";
-// import Navbar from "@/components/custom/dashboard/Navbar";
-
-// export default function DashboardLayout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
-//   const handleToggleSidebar = () => setMobileSidebarOpen((prev) => !prev);
-//   const handleCloseSidebar = () => setMobileSidebarOpen(false);
-
-//   return (
-//     <main className="h-screen flex">
-//       <Sidebar
-//         isMobileOpen={isMobileSidebarOpen}
-//         onCloseAction={handleCloseSidebar}
-//       />
-
-//       <div className="flex-1 flex flex-col overflow-hidden">
-//         <Navbar onToggleSidebarAction={handleToggleSidebar} />
-//         <main className="flex-1 p-4 overflow-auto">{children}</main>
-//       </div>
-//     </main>
-//   );
-// }

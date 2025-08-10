@@ -1,13 +1,11 @@
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSection from "@/components/dashboard/Details";
 
-import React from "react";
-
-const page = () => {
+export default function Page() {
   return (
-    <div>
+    <div className="min-h-full">
+      <DashboardHeader />
       <DashboardSection />
     </div>
   );
-};
-
-export default page;
+}
