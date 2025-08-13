@@ -2,8 +2,7 @@
   "crons": [
     {
       "path": "/api/generate-reports",
-      "schedule": "0 9 * * 1",
-      "timezone": "America/New_York"
+      "schedule": "0 9 * * 1"
     }
   ],
   "version": 2
