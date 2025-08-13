@@ -9,17 +9,15 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>
-          <div className="">
-            <HomeNav />
-          </div>
-          <main> {children}</main>
-          <div className="">
-            <Footer />
-          </div>
-        </body>
-      </html>
+      <body>
+        <div className="">
+          <HomeNav />
+        </div>
+        <body> {children}</body>
+        <div className="">
+          <Footer />
+        </div>
+      </body>
     </ClerkProvider>
   );
 }

@@ -1,11 +1,10 @@
-import DashboardSection from "@/components/dashboard/Details";
-
+import ReportList from "@/components/dashboard/ReportList";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <DashboardSection />
+      <ReportList />
     </div>
   );
 };

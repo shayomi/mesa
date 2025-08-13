@@ -38,7 +38,7 @@ export default function BusinessForm() {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-0 px-4 sm:px-6 lg:px-8">
       <div className="w-full mx-auto">
         {/* Page Header */}
         <div className="mb-10 text-start">

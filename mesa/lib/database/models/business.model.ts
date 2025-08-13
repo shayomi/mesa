@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Document, Schema, model, models } from "mongoose";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import mongoose from "mongoose";
 
 export interface IBusiness extends Document {
@@ -17,6 +17,8 @@ export interface IBusiness extends Document {
   painPoint: string;
   owner: { _id: string; firstName: string; lastName: string };
   targetMarket: string[];
+  lastReportGenerated?: Date;
+  reportFrequency: "weekly" | "monthly" | "none";
 }
 
 const BusinessSchema = new Schema({
@@ -25,17 +27,23 @@ const BusinessSchema = new Schema({
   location: { type: String },
   createdAt: { type: Date, default: Date.now },
   imageUrl: { type: String, required: true },
-  industry: { type: Schema.Types.ObjectId, ref: "industry" },
-  targetAudience: { type: Date, default: Date.now },
+  industry: { type: Schema.Types.ObjectId, ref: "Industry" },
+  targetAudience: { type: String, required: true },
   goals: { type: String, required: true },
   companySize: { type: String, required: true },
-  region: { type: Array, required: true },
+  region: { type: [String], required: true },
   painPoint: { type: String },
-  owner: { type: Schema.Types.ObjectId, ref: "user" },
-  targetMarket: { type: Array, required: true },
+  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  targetMarket: { type: [String], required: true },
+  lastReportGenerated: { type: Date },
+  reportFrequency: {
+    type: String,
+    enum: ["weekly", "monthly", "none"],
+    default: "none",
+  },
 });
 
 const Business =
-  mongoose.models.Business || mongoose.model("Event", BusinessSchema);
+  models.Business || model<IBusiness>("Business", BusinessSchema);
 
 export default Business;

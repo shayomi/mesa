@@ -16,120 +16,94 @@ export type UpdateUserParams = {
 };
 
 // ====== EVENT PARAMS
-export type CreateEventParams = {
+export type CreateBusinessParams = {
   userId: string;
-  event: {
-    title: string;
-    description: string;
-    location: string;
+  business: {
+    businessName: string;
+    description?: string;
+    location?: string;
     imageUrl: string;
-    startDateTime: Date;
-    endDateTime: Date;
-    categoryId: string;
-    price: string;
-    isFree: boolean;
-    url: string;
+    industryId: string;
+    targetAudience?: string;
+    goals: string;
+    companySize: string;
+    region: string[];
+    painPoint?: string;
+    targetMarket: string[];
+    reportFrequency?: "weekly" | "monthly" | "none"; // Added this
   };
   path: string;
 };
 
-export type UpdateEventParams = {
+export type UpdateBusinessParams = {
   userId: string;
-  event: {
+  business: {
     _id: string;
-    title: string;
+    businessName: string;
+    description?: string;
+    location?: string;
     imageUrl: string;
-    description: string;
-    location: string;
-    startDateTime: Date;
-    endDateTime: Date;
-    categoryId: string;
-    price: string;
-    isFree: boolean;
-    url: string;
+    industryId: string;
+    targetAudience?: string;
+    goals: string;
+    companySize: string;
+    region: string[];
+    painPoint?: string;
+    targetMarket: string[];
+    reportFrequency?: "weekly" | "monthly" | "none"; // Added this
   };
   path: string;
 };
 
-export type DeleteEventParams = {
-  eventId: string;
+export type DeleteBusinessParams = {
+  businessId: string;
   path: string;
 };
 
-export type GetAllEventsParams = {
+export type GetAllBusinessParams = {
   query: string;
-  category: string;
+  industry: string;
   limit: number;
   page: number;
 };
 
-export type GetEventsByUserParams = {
+export type GetBusinessByUserParams = {
   userId: string;
   limit?: number;
   page: number;
 };
 
-export type GetRelatedEventsByCategoryParams = {
-  categoryId: string;
-  eventId: string;
-  limit?: number;
-  page: number | string;
-};
-
-export type Event = {
+export type Business = {
   _id: string;
-  title: string;
-  description: string;
-  price: string;
-  isFree: boolean;
+  businessName: string;
+  description?: string;
+  location?: string;
   imageUrl: string;
-  location: string;
-  startDateTime: Date;
-  endDateTime: Date;
-  url: string;
-  organizer: {
+  createdAt: Date;
+  goals: string;
+  companySize: string;
+  region: string[];
+  painPoint?: string;
+  targetAudience?: string;
+  reportFrequency?: "weekly" | "monthly" | "none";
+  targetMarket: string[];
+  owner: {
     _id: string;
     firstName: string;
     lastName: string;
   };
-  category: {
+  industry: {
     _id: string;
     name: string;
   };
 };
 
 // ====== CATEGORY PARAMS
-export type CreateCategoryParams = {
-  categoryName: string;
+export type CreateIndustryParams = {
+  industryName: string;
 };
 
 // ====== ORDER PARAMS
-export type CheckoutOrderParams = {
-  eventTitle: string;
-  eventId: string;
-  price: string;
-  isFree: boolean;
-  buyerId: string;
-};
-
-export type CreateOrderParams = {
-  stripeId: string;
-  eventId: string;
-  buyerId: string;
-  totalAmount: string;
-  createdAt: Date;
-};
-
-export type GetOrdersByEventParams = {
-  eventId: string;
-  searchString: string;
-};
-
-export type GetOrdersByUserParams = {
-  userId: string | null;
-  limit?: number;
-  page: string | number | null;
-};
 
 // ====== URL QUERY PARAMS
 export type UrlQueryParams = {
