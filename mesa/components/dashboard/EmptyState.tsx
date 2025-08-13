@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/jsx-no-undef */
+
 import { auth } from "@clerk/nextjs/server";
 import { getBusinessByUser } from "@/lib/actions/business.action";
 import { BusinessList } from "@/components/dashboard/BusinessList";

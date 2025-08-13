@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-async-client-component */
-"use client";
-
 import { getBusinessById } from "@/lib/actions/business.action";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -23,29 +19,19 @@ import {
   Globe,
   BarChart,
   Clock,
-  FileText,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { getReportsByBusiness } from "@/lib/actions/report.action";
-import saveAs from "file-saver";
-import { GenerateReportButton } from "@/components/common/GenerateReportButton";
-import { IReport } from "@/lib/database/models/report.model";
 
-type BusinessDetailPageProps = {
-  params: {
-    id: string;
-  };
-};
+interface PageProps {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
 
-export default async function BusinessDetailPage({
-  params,
-}: BusinessDetailPageProps) {
-  const business = await getBusinessById(params.id);
+export default async function BusinessDetailPage({ params }: PageProps) {
+  const business = await getBusinessById(params.id); // ✅ no `await params`
 
   if (!business) return notFound();
-
-  // const reports = (await getReportsByBusiness(params.id)) as IReport[];
 
   return (
     <div className="p-6 space-y-6">
@@ -193,79 +179,50 @@ export default async function BusinessDetailPage({
       </div>
 
       {/* Recent Reports Section */}
-      {/* <Card>
+      <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="flex items-center gap-2">
-              <BarChart className="h-5 w-5" />
-              Recent Reports
-            </CardTitle>
-            <GenerateReportButton business={business} />
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart className="h-5 w-5" />
+            Recent Reports
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          {reports.length > 0 ? (
-            <div className="border rounded-lg divide-y">
-              {reports.map((report) => (
-                <div
-                  key={report._id as string}
-                  className="p-4 flex justify-between items-center hover:bg-gray-50"
-                >
-                  <div>
-                    <p className="font-medium">{report.title}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(report.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/reports/${report._id}`}>
-                        View
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        const blob = new Blob([report.content], {
-                          type: "text/markdown",
-                        });
-                        saveAs(blob, `${report.title}.md`);
-                      }}
-                    >
-                      Download
-                    </Button>
-                  </div>
+          <div className="border rounded-lg divide-y">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="p-4 flex justify-between items-center hover:bg-gray-50"
+              >
+                <div>
+                  <p className="font-medium">Market Expansion Analysis</p>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date().toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-center border-2 border-dashed border-gray-200 rounded-lg">
-              <FileText className="h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">
-                No reports yet
-              </h3>
-              <p className="text-sm text-gray-500 mt-1 mb-4">
-                Generate your first report for this business
-              </p>
-              <GenerateReportButton business={business} />
-            </div>
-          )}
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Download
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
-        {reports.length > 0 && (
-          <CardFooter className="border-t pt-4">
-            <Button variant="ghost" className="text-blue-600" asChild>
-              <Link href={`/dashboard/business/${business._id}/reports`}>
-                View all reports <span className="ml-1">→</span>
-              </Link>
-            </Button>
-          </CardFooter>
-        )}
-      </Card> */}
+        <CardFooter className="border-t pt-4">
+          <Button variant="ghost" className="text-blue-600" asChild>
+            <Link href={`/dashboard/business/${business._id}/reports`}>
+              View all reports <span className="ml-1">→</span>
+            </Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
