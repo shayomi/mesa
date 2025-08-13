@@ -24,15 +24,14 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 type BusinessDetailPageProps = {
-  params: {
-    id: string;
-  };
+  params: { id: string };
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
 export default async function BusinessDetailPage({
   params,
 }: BusinessDetailPageProps) {
-  const business = await getBusinessById((await params).id);
+  const business = await getBusinessById(params.id);
 
   if (!business) return notFound();
 
