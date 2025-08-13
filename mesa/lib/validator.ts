@@ -26,4 +26,5 @@ export const businessFormSchema = z.object({
   targetMarket: z
     .array(z.string().min(1, "Target market entry cannot be empty"))
     .min(1, "Select at least one target market"),
+  reportFrequency: z.enum(["weekly", "monthly", "none"]),
 });

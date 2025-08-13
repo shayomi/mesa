@@ -1,171 +1,204 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import {
   BarChartBig,
   Building2,
   MapPinned,
   LineChart,
-  Users,
   FileText,
   UploadCloud,
   Plus,
+  ArrowRight,
+  Activity,
+  UserPlus,
+  Database,
+  Combine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
 import { auth } from "@clerk/nextjs/server";
 import { getBusinessByUser } from "@/lib/actions/business.action";
 import { UserBusinessCard } from "../common/UserBusinessCard";
-import { Business } from "@/types";
 import { Typography } from "../ui/typography";
-import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default async function DashboardSection() {
   const { sessionClaims } = await auth();
-
   const userId = (sessionClaims as unknown as { userId: string })?.userId;
-
   const response = await getBusinessByUser({ userId, page: 1 });
-
   const businesses = response?.data ?? [];
+
   return (
-    <section>
-      <div className="mt-2 grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
-        {/* Summary Cards */}
-        <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          {businesses.length > 0 ? (
-            businesses.map((business: any) => (
-              <UserBusinessCard key={business._id} business={business} />
-            ))
-          ) : (
-            <p>No businesses found for your account.</p>
-          )}
-          <Card className="bg-red-100">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-purple-600 font-bold">
-                Market Strategies
-              </CardTitle>
-              <BarChartBig className="text-blue-600" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">38 Reports</p>
-              <p className="text-sm text-muted-foreground">in last 30 days</p>
-            </CardContent>
-          </Card>
+    <section className="p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <Typography variant="h2" className="font-bold text-gray-900">
+            Dashboard Overview
+          </Typography>
+          <Typography variant="lead" className="text-gray-500">
+            Your business insights at a glance
+          </Typography>
+        </div>
+        <Button asChild>
+          <Link href="/business/new">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Business
+          </Link>
+        </Button>
+      </div>
 
-          <Card className="bg-red-100">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-purple-600 font-bold">
-                Company Size
-              </CardTitle>
-              <Building2 className="text-purple-600" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">45 SMEs</p>
-              <p className="text-sm text-muted-foreground">+12 Enterprises</p>
-            </CardContent>
-          </Card>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column - Stats & Businesses */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+            <StatCard
+              title="Market Strategies"
+              value="Growth and Revenue"
+              description="Explore different market strategies by various models"
+              icon={<BarChartBig className="text-blue-500" />}
+              color="bg-blue-50"
+            />
+            <StatCard
+              title="Growth Index"
+              value="Considers all major growth indicators"
+              description="KPI's and other models to help with growth"
+              icon={<Building2 className="text-purple-500" />}
+              color="bg-purple-50"
+            />
+            <StatCard
+              title="Regions"
+              value="Worldwide"
+              description="Strategies factor policeis all over the world"
+              icon={<MapPinned className="text-green-500" />}
+              color="bg-green-50"
+            />
+            <StatCard
+              title="Industries"
+              value="All Sectors"
+              description="Strategies for growth across all major industries"
+              icon={<LineChart className="text-pink-500" />}
+              color="bg-pink-50"
+            />
+          </div>
 
-          <Card className="bg-red-100">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-purple-600 font-bold">
-                Regions
+          {/* Businesses Section */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-gray-700" />
+                Your Businesses
               </CardTitle>
-              <MapPinned className="text-green-600" />
+              <CardDescription>
+                {businesses.length} registered businesses
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">12 Countries</p>
-              <p className="text-sm text-muted-foreground">NA, EU, Asia</p>
+              {businesses.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {businesses.map((business: any) => (
+                    <UserBusinessCard key={business._id} business={business} />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  title="No businesses yet"
+                  description="Get started by adding your first business"
+                  actionText="Add Business"
+                  actionHref="/business/new"
+                />
+              )}
             </CardContent>
-          </Card>
-
-          <Card className="bg-red-100">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-purple-600 font-bold">
-                Industries
-              </CardTitle>
-              <LineChart className="text-pink-600" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">Across 8 Sectors</p>
-              <p className="text-sm text-muted-foreground">
-                Tech, Retail, Finance...
-              </p>
-            </CardContent>
+            {businesses.length > 0 && (
+              <CardFooter className="border-t pt-4">
+                <Button variant="ghost" className="text-primary" asChild>
+                  <Link href="/dashboard/business-list">
+                    View all businesses <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </CardFooter>
+            )}
           </Card>
         </div>
 
-        {/* Right Action Panel */}
-        <div className="lg:col-span-4 flex flex-col gap-4">
-          <Card className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg">
-            <CardContent className="p-5">
-              <h3 className="text-xl font-semibold mb-1">Upgrade to Pro</h3>
-              <p className="text-sm mb-4">
-                Unlock advanced insights, team analytics, and AI
-                recommendations.
-              </p>
-              <Button
-                variant="secondary"
-                className="bg-white text-indigo-700 hover:bg-gray-100"
-              >
+        {/* Right Column - Actions & Upgrade */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Upgrade Card */}
+          <Card className="bg-gradient-to-br from-indigo-600 to-purple-600 border-0 text-white">
+            <CardHeader>
+              <CardTitle className="text-white">Unlock Pro Features</CardTitle>
+              <CardDescription className="text-indigo-100">
+                Advanced analytics and insights
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-3 text-sm text-indigo-100">
+                <li className="flex items-center gap-2">
+                  <Activity className="h-4 w-4" /> Real-time market monitoring
+                </li>
+                <li className="flex items-center gap-2">
+                  <Database className="h-4 w-4" /> Unlimited report generation
+                </li>
+                <li className="flex items-center gap-2">
+                  <UserPlus className="h-4 w-4" /> Team collaboration
+                </li>
+                <li className="flex items-center gap-2 text-red-200">
+                  <Combine className="h-4 w-4" /> Coming soon
+                </li>
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full bg-white cursor-not-allowed text-indigo-600 hover:bg-gray-100">
                 Upgrade Now
               </Button>
+            </CardFooter>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card className="border-0 shadow-sm">
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+                <Link href="dashboard/generate-report">
+                  <FileText className="h-6 w-6" />
+                  Generate Report
+                </Link>
+              </Button>
+              <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+                <Link href="dashboard/business/create">
+                  <UploadCloud className="h-6 w-6" />
+                  Add Business
+                </Link>
+              </Button>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Quick Actions</CardTitle>
-              <Plus className="text-gray-500" />
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              <Button variant="outline" className="flex gap-2">
-                <FileText size={16} /> Generate Report
-              </Button>
-              <Button variant="outline" className="flex gap-2">
-                <UploadCloud size={16} /> Add new business
-              </Button>
-              <Button
-                variant="outline"
-                className="col-span-2 flex justify-center gap-2"
-              >
-                <Users size={16} /> Invite Team
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Recent Activity */}
         </div>
 
-        {/* Activity & Chart */}
-        <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Generated report for Tech Expansion</span>
-                <span className="text-muted-foreground">2h ago</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Uploaded SME dataset</span>
-                <span className="text-muted-foreground">Yesterday</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Invited Sarah from SalesOps</span>
-                <span className="text-muted-foreground">2 days ago</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
+        {/* Bottom Section - Charts */}
+        <div className="lg:col-span-12">
+          <Card className="border-0 shadow-sm">
             <CardHeader>
               <CardTitle>Report Trends</CardTitle>
+              <CardDescription>Last 30 days performance</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="h-40 bg-gray-100 rounded-lg flex items-center justify-center text-muted-foreground">
-                {/* Replace this with chart component */}
-                <span>📊 Chart Placeholder</span>
+            <CardContent className="h-80">
+              <div className="h-full bg-gray-50 rounded-lg flex items-center justify-center">
+                <div className="text-center text-gray-400">
+                  <BarChartBig className="mx-auto h-12 w-12" />
+                  <p>Report analytics coming soon</p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -174,3 +207,52 @@ export default async function DashboardSection() {
     </section>
   );
 }
+
+// Reusable Components
+const StatCard = ({
+  title,
+  value,
+  description,
+  icon,
+  color,
+}: {
+  title: string;
+  value: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
+}) => (
+  <Card className={`border-0 ${color} shadow-sm`}>
+    <CardHeader className="flex flex-row items-center justify-between p-4">
+      <CardTitle className="text-sm font-medium text-gray-700">
+        {title}
+      </CardTitle>
+      <div className="p-2 rounded-full bg-white">{icon}</div>
+    </CardHeader>
+    <CardContent className="p-4 pt-0">
+      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
+    </CardContent>
+  </Card>
+);
+
+const EmptyState = ({
+  title,
+  description,
+  actionText,
+  actionHref,
+}: {
+  title: string;
+  description: string;
+  actionText: string;
+  actionHref: string;
+}) => (
+  <div className="flex flex-col items-center justify-center p-8 text-center border-2 border-dashed rounded-lg">
+    <Building2 className="h-10 w-10 text-gray-400 mb-3" />
+    <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+    <p className="text-sm text-gray-500 mt-1 mb-4">{description}</p>
+    <Button asChild>
+      <Link href={actionHref}>{actionText}</Link>
+    </Button>
+  </div>
+);

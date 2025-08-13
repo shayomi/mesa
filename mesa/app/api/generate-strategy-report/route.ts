@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// app/api/reports/generate/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
-import { Document, Packer, Paragraph, TextRun } from "docx";
 import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/database";
 import { saveReport } from "@/lib/actions/report.action";
@@ -12,6 +13,7 @@ const openai = new OpenAI({
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
+    businessId,
     companyName,
     industry,
     currentMarket,
@@ -23,10 +25,8 @@ export async function POST(req: NextRequest) {
 
   const { userId } = await auth();
   if (!userId) {
-    throw new Error("User not authenticated");
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
-  await connectToDatabase();
 
   const prompt = `
 Generate a comprehensive market expansion strategy report for the following company. Each section must be at least 500 words and written in a formal business tone.
@@ -56,46 +56,33 @@ Structure the report with the following sections (each clearly labeled and detai
 Respond in Markdown-like format with clear headings and spacing.
 `;
 
-  const response = await openai.chat.completions.create({
-    model: "gpt-4.1",
-    messages: [{ role: "user", content: prompt }],
-  });
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+    });
 
-  const content =
-    response.choices[0].message.content || "No content generated.";
+    const content =
+      response.choices[0].message.content || "No content generated.";
+    const reportTitle = `Market Expansion Strategy for ${companyName}`;
 
-  const reportTitle = `Market Expansion Strategy for ${companyName}`;
-  const createdAt = new Date().toISOString();
+    // Save to DB
+    const report = await saveReport({
+      userId,
+      businessId,
+      title: reportTitle,
+      content,
+    });
 
-  // Save to DB
-  await saveReport({ userId, title: reportTitle, content });
-
-  return NextResponse.json({
-    title: reportTitle,
-    createdAt,
-  });
-
-  const doc = new Document({
-    sections: [
-      {
-        properties: {},
-        children: content.split("\n\n").map(
-          (text) =>
-            new Paragraph({
-              children: [new TextRun(text)],
-            })
-        ),
-      },
-    ],
-  });
-
-  const buffer = await Packer.toBuffer(doc);
-
-  return new NextResponse(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": "application/docx",
-      "Content-Disposition":
-        "attachment; filename=Market-Expansion-Strategy.docx",
-    },
-  });
+    return NextResponse.json({
+      id: report._id,
+      title: report.title,
+      createdAt: report.createdAt,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to generate report" },
+      { status: 500 }
+    );
+  }
 }

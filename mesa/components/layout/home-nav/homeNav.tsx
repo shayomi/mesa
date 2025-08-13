@@ -42,14 +42,6 @@ const HomeNav = () => {
             </Typography>
           </Link>
           <div className="flex flex-row gap-2 ml-12 items-center">
-            {/* <Link href="/dashboard">
-              <Button
-                variant="default"
-                className="cursor-pointer bg-blue-300 text-black"
-              >
-                Sign In
-              </Button>
-            </Link> */}
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
@@ -59,9 +51,24 @@ const HomeNav = () => {
               </Button>
             </SignedOut>
 
-            <Button variant="outline" className="cursor-pointer text-blue-500">
-              Sign Up
-            </Button>
+            <SignedIn>
+              <Button
+                asChild
+                variant="outline"
+                className="cursor-pointer text-blue-500"
+              >
+                <Link href="/dashboard">Continue to Dashboard</Link>
+              </Button>
+            </SignedIn>
+
+            <SignedOut>
+              <Button
+                variant="outline"
+                className="cursor-pointer text-blue-500"
+              >
+                Sign Up
+              </Button>
+            </SignedOut>
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
           </button>
 
           {/* Breadcrumb with per-color styling */}
-          <div className="text-sm font-semibold tracking-wide flex flex-wrap gap-1 items-center">
+          <div className="ml-0 sm:ml-64 text-sm font-semibold tracking-wide flex flex-wrap gap-1 items-center">
             {pathSegments.map((segment, index) => (
               <span key={index} className="flex items-center gap-1">
                 <span className={cn(colorClasses[index % colorClasses.length])}>

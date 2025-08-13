@@ -17,9 +17,10 @@ export async function GET() {
   const reports = await getReportsByUser(userId);
 
   return NextResponse.json(
-    reports.map(({ _id, title, createdAt }) => ({
+    reports.map(({ _id, title, content, createdAt }) => ({
       id: _id,
       title,
+      content,
       createdAt,
     }))
   );

@@ -1,21 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import mongoose, { Schema, model, models, Document } from "mongoose";
+// models/report.model.ts
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IReport extends Document {
   userId: string;
+  businessId: mongoose.Types.ObjectId;
   title: string;
+  content: string;
+  type: "manual" | "scheduled";
   createdAt: Date;
-  content?: string; // full report (optional)
+  updatedAt: Date;
 }
 
-const ReportSchema = new Schema<IReport>({
-  userId: { type: String, required: true, index: true },
-  title: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-  content: { type: String },
-});
+const ReportSchema = new Schema<IReport>(
+  {
+    userId: { type: String, required: true, index: true },
+    businessId: {
+      type: Schema.Types.ObjectId,
+      ref: "Business",
+      required: true,
+    },
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    type: { type: String, enum: ["manual", "scheduled"], default: "manual" },
+  },
+  { timestamps: true }
+);
 
-// Prevent model overwrite issue in Next.js hot reloads
-const Report = mongoose.models.Report || mongoose.model("Report", ReportSchema);
+const Report =
+  mongoose.models.Report || mongoose.model<IReport>("Report", ReportSchema);
 
 export default Report;

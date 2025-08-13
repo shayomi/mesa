@@ -73,7 +73,7 @@ export async function getBusinessById(businessId: string) {
 }
 
 // UPDATE
-export async function updatebusiness({
+export async function updateBusiness({
   userId,
   business,
   path,

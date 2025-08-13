@@ -30,6 +30,7 @@ export type CreateBusinessParams = {
     region: string[];
     painPoint?: string;
     targetMarket: string[];
+    reportFrequency?: "weekly" | "monthly" | "none"; // Added this
   };
   path: string;
 };
@@ -49,6 +50,7 @@ export type UpdateBusinessParams = {
     region: string[];
     painPoint?: string;
     targetMarket: string[];
+    reportFrequency?: "weekly" | "monthly" | "none"; // Added this
   };
   path: string;
 };
@@ -83,6 +85,7 @@ export type Business = {
   region: string[];
   painPoint?: string;
   targetAudience?: string;
+  reportFrequency?: "weekly" | "monthly" | "none";
   targetMarket: string[];
   owner: {
     _id: string;
