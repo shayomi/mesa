@@ -47,7 +47,7 @@ export default async function DashboardSection() {
           </Typography>
         </div>
         <Button asChild>
-          <Link href="/business/new">
+          <Link href="/dashboard/business/create">
             <Plus className="mr-2 h-4 w-4" />
             Add Business
           </Link>
@@ -175,7 +175,7 @@ export default async function DashboardSection() {
                 </Link>
               </Button>
               <Button variant="outline" className="h-24 flex-col gap-2" asChild>
-                <Link href="dashboard/business/create">
+                <Link href="/dashboard/business/create">
                   <UploadCloud className="h-6 w-6" />
                   Add Business
                 </Link>

@@ -60,6 +60,11 @@ export type DeleteBusinessParams = {
   path: string;
 };
 
+export type DeleteReportParams = {
+  reportId: string;
+  path: string;
+};
+
 export type GetAllBusinessParams = {
   query: string;
   industry: string;

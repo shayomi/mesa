@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { saveAs } from "file-saver";
+import { DeleteConfirmation } from "./DeleteReport";
+import Link from "next/link";
 
 type Report = {
   _id: string;
@@ -124,6 +126,8 @@ export default function ReportList() {
                   </span>
                 </div>
               </div>
+            </div>
+            <div>
               <FileText className="h-6 w-6 text-blue-500" />
             </div>
           </CardHeader>
@@ -140,11 +144,16 @@ export default function ReportList() {
                 Download
               </Button>
 
-              <Button variant="outline" size="sm" className="gap-1">
+              <Button variant="outline">
+                <DeleteConfirmation reportId={report._id} />
+              </Button>
+            </div>
+            <Link href={`/dashboard/reports/${report._id}`}>
+              <Button variant="outline" size="sm" className="gap-1 mt-4">
                 View Details
                 <ChevronRight className="h-4 w-4" />
               </Button>
-            </div>
+            </Link>
           </CardContent>
         </Card>
       ))}

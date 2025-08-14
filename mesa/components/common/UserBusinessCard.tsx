@@ -30,7 +30,7 @@ export const UserBusinessCard = ({ business }: BusinessCardProps) => {
       />
       <div className="text-left space-y-1 px-6">
         <div className="flex flex-row gap-2 justify-between">
-          <CardTitle className="text-xl font-bold text-blue-700">
+          <CardTitle className="text-xl font-bold text-[#072a81]">
             {business.businessName}
           </CardTitle>
           <div className="flex flex-row items-center gap-2">
@@ -60,7 +60,9 @@ export const UserBusinessCard = ({ business }: BusinessCardProps) => {
             className="h-full mt-6"
             href={`/dashboard/business/${business._id}`}
           >
-            <Button variant="default">View details</Button>{" "}
+            <Button variant="default" className="bg-blue-200 text-blue-800">
+              View details
+            </Button>{" "}
           </Link>
         </div>
       </div>

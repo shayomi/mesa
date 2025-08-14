@@ -58,7 +58,7 @@ export function BusinessList({
             title="No businesses yet"
             description="Get started by adding your first business"
             actionText="Add Business"
-            actionHref="/business/new"
+            actionHref="/dashboard/business/create"
           />
         )}
       </div>
