@@ -24,12 +24,12 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 
 interface PageProps {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function BusinessDetailPage({ params }: PageProps) {
-  const business = await getBusinessById(params.id); // ✅ no `await params`
+  const business = await getBusinessById((await params).id); // ✅ no `await params`
 
   if (!business) return notFound();
 
