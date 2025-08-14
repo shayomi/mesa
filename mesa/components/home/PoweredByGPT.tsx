@@ -1,17 +1,25 @@
+"use client";
+
 import { poweredByGptFeatures } from "@/lib/data";
+import { fadeIn } from "@/lib/Variants";
+import { motion } from "framer-motion";
 import { FC } from "react";
 
 const PoweredByGPTSection: FC = () => {
   return (
-    <section className=" mx-auto px-12 py-16">
+    <motion.section className=" mx-auto px-12 py-16 mt-24">
       <h2 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-8">
         Powered by GPT and Business Strategy Frameworks
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-12">
+      <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-12">
         {poweredByGptFeatures.map((feature, index) => {
           const Icon = feature.icon;
           return (
-            <div
+            <motion.div
+              variants={fadeIn("right", "tween", index * 0.4, 0.8)}
+              initial="hidden"
+              whileInView={"show"}
+              exit={"show"}
               key={index}
               className="flex flex-col items-center justify-center gap-4 bg-white border border-gray-200 rounded-xl shadow-sm p-5"
             >
@@ -26,11 +34,11 @@ const PoweredByGPTSection: FC = () => {
                   {feature.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 

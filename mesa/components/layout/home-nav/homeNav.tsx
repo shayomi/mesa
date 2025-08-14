@@ -1,78 +1,102 @@
 /* eslint-disable @next/next/no-img-element */
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import React from "react";
+import { Menu, X } from "lucide-react";
 
 const HomeNav = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
-    <div className="absolute top-0 left-0 w-full z-30 px-12 py-4">
-      <div className="flex flex-row justify-between gap-4 items-center">
-        <div>
+    <nav className="absolute top-0 left-0 w-full z-30 px-4 sm:px-8 lg:px-12 py-4 bg-transparent ">
+      <div className="flex justify-between items-center w-full">
+        {/* Left: Logo */}
+        <div className="flex-shrink-0">
           <img
             src="assets/logo/mesa-dark.svg"
-            alt="Homepage hero image"
-            className="h-16 w-32"
+            alt="Mesa Logo"
+            className="h-12 w-auto"
           />
         </div>
-        <div className="flex justigy-around gap-8 items-center text-secondary">
-          <Link href="">
-            <Typography
-              variant="smallText"
-              className="font-bold text-secondary"
-            >
-              About
-            </Typography>
-          </Link>
-          <Link href="">
-            <Typography
-              variant="smallText"
-              className="font-bold text-secondary"
-            >
-              Blog
-            </Typography>
-          </Link>
-          <Link href="">
-            <Typography
-              variant="smallText"
-              className="font-bold text-secondary"
-            >
-              Contact
-            </Typography>
-          </Link>
-          <div className="flex flex-row gap-2 ml-12 items-center">
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
-            <SignedOut>
-              <Button asChild className="rounded-md" variant="default">
-                <Link href="/sign-in">Login</Link>
-              </Button>
-            </SignedOut>
 
-            <SignedIn>
-              <Button
-                asChild
-                variant="outline"
-                className="cursor-pointer text-blue-500"
+        {/* Middle: Desktop Nav */}
+        <div className="hidden lg:flex items-center gap-8 text-secondary">
+          {["About", "Blog", "Contact"].map((item) => (
+            <Link key={item} href={`/${item.toLowerCase()}`}>
+              <Typography
+                variant="smallText"
+                className="font-bold text-secondary hover:text-primary transition-colors"
               >
-                <Link href="/dashboard">Continue to Dashboard</Link>
-              </Button>
-            </SignedIn>
+                {item}
+              </Typography>
+            </Link>
+          ))}
+        </div>
 
-            <SignedOut>
-              <Button
-                variant="outline"
-                className="cursor-pointer text-blue-500"
-              >
-                Sign Up
-              </Button>
-            </SignedOut>
+        {/* Right: Always visible Dashboard + Auth */}
+        <div className="flex items-center gap-3">
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+          <SignedOut>
+            <Button asChild size="sm" variant="default">
+              <Link href="/sign-in">Login</Link>
+            </Button>
+          </SignedOut>
+
+          <SignedIn>
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="text-blue-500 border-blue-500 hover:bg-blue-50"
+            >
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+          </SignedIn>
+
+          <SignedOut>
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-blue-500 border-blue-500 hover:bg-blue-50"
+            >
+              Sign Up
+            </Button>
+          </SignedOut>
+
+          {/* Mobile toggle button */}
+          <div className="lg:hidden">
+            <button
+              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              onClick={() => setMobileOpen((prev) => !prev)}
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="lg:hidden mt-4 space-y-4 border-t border-gray-200 pt-4">
+          {["About", "Blog", "Contact"].map((item) => (
+            <Link
+              key={item}
+              href={`/${item.toLowerCase()}`}
+              className="block font-medium text-gray-700 hover:text-primary"
+              onClick={() => setMobileOpen(false)}
+            >
+              {item}
+            </Link>
+          ))}
+        </div>
+      )}
+    </nav>
   );
 };
 
