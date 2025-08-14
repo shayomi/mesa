@@ -7,7 +7,6 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <head />
       <body className="bg-white">
         <DashboardLayout>{children}</DashboardLayout>
       </body>

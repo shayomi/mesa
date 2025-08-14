@@ -33,7 +33,7 @@ export async function EmptyState({
           <p className="text-gray-500">Manage all your registered businesses</p>
         </div>
         <Button asChild>
-          <Link href="/business/new">
+          <Link href="dashboard/business/create">
             <Plus className="mr-2 h-4 w-4" />
             Add Business
           </Link>

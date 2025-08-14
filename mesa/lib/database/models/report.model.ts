@@ -14,6 +14,7 @@ export interface IReport extends Document {
 const ReportSchema = new Schema<IReport>(
   {
     userId: { type: String, required: true, index: true },
+
     title: { type: String, required: true },
     content: { type: String, required: true },
     type: { type: String, enum: ["manual", "scheduled"], default: "manual" },

@@ -18,7 +18,7 @@ export async function GET() {
 
   return NextResponse.json(
     reports.map(({ _id, title, content, createdAt }) => ({
-      id: _id,
+      _id: _id,
       title,
       content,
       createdAt,
