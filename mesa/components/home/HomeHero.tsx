@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/lib/Variants";
 import { transition1 } from "@/lib/Transition";
+import Link from "next/link";
 
 const HomeHero = () => {
   return (
@@ -64,11 +65,7 @@ const HomeHero = () => {
                 </Typography>
 
                 <div className="flex mt-10 sm:mt-14 gap-4">
-                  <a
-                    // href={process.env.NEXT_PUBLIC_APPLICATION_FORM_LINK}
-                    href=""
-                    target="_blank"
-                  >
+                  <Link href="/sign-in">
                     <Button
                       size="lg"
                       variant="outline"
@@ -76,21 +73,7 @@ const HomeHero = () => {
                     >
                       Get Started
                     </Button>
-                  </a>
-
-                  {/* <a
-                    href={process.env.NEXT_PUBLIC_NOMINATION_FORM_LINK}
-                    target="_blank"
-                  >
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      color="primary"
-                      className="w-36 sm:w-48"
-                    >
-                      Nominate a Startup
-                    </Button>
-                  </a> */}
+                  </Link>
                 </div>
               </div>
             </motion.div>
