@@ -10,7 +10,7 @@ const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY! });
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { businessId: string } }
+  { params }: { params: Promise<{ businessId: string }> }
 ) {
   try {
     const { userId } = await auth();
@@ -19,9 +19,11 @@ export async function POST(
     await connectToDatabase();
 
     // ✅ No await here — params is synchronous
-    const business = await Business.findById(params.businessId).populate(
-      "industry owner"
-    );
+    const business = await Business.findById(
+      (
+        await params
+      ).businessId
+    ).populate("industry owner");
     if (!business)
       return new NextResponse("Business not found", { status: 404 });
 
