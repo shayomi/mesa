@@ -30,6 +30,7 @@ export const DeleteConfirmation = ({ businessId }: { businessId: string }) => {
           alt="edit"
           width={20}
           height={20}
+          className="cursor-pointer"
         />
       </AlertDialogTrigger>
 

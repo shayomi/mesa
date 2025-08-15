@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBusinessById } from "@/lib/actions/business.action";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import { getReportsByBusinessId } from "@/lib/actions/report.action";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,6 +32,7 @@ interface PageProps {
 
 export default async function BusinessDetailPage({ params }: PageProps) {
   const business = await getBusinessById((await params).id); // ✅ no `await params`
+  const reports = await getReportsByBusinessId((await params).id);
 
   if (!business) return notFound();
 
@@ -188,31 +191,34 @@ export default async function BusinessDetailPage({ params }: PageProps) {
         </CardHeader>
         <CardContent>
           <div className="border rounded-lg divide-y">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="p-4 flex justify-between items-center hover:bg-gray-50"
-              >
-                <div>
-                  <p className="font-medium">Market Expansion Analysis</p>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date().toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </p>
+            {reports.length === 0 ? (
+              <p className="p-4 text-muted-foreground">No reports yet</p>
+            ) : (
+              reports.map((report: any) => (
+                <div
+                  key={report.id}
+                  className="p-4 flex justify-between items-center hover:bg-gray-50"
+                >
+                  <div>
+                    <p className="font-medium">{report.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(report.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Link href={`/dashboard/reports/${report.id}`}>
+                      {" "}
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                    <Button variant="outline" size="sm">
+                      Download
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    View
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Download
-                  </Button>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
         <CardFooter className="border-t pt-4">

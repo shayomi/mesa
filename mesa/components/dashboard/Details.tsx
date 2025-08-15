@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   BarChartBig,
@@ -27,6 +28,7 @@ import { getBusinessByUser } from "@/lib/actions/business.action";
 import { UserBusinessCard } from "../common/UserBusinessCard";
 import { Typography } from "../ui/typography";
 import Link from "next/link";
+import { GenerateReportDropdown } from "./GenerateReportDropdown";
 
 export default async function DashboardSection() {
   const { sessionClaims } = await auth();
@@ -168,12 +170,7 @@ export default async function DashboardSection() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-24 flex-col gap-2" asChild>
-                <Link href="dashboard/generate-report">
-                  <FileText className="h-6 w-6" />
-                  Generate Report
-                </Link>
-              </Button>
+              <GenerateReportDropdown />
               <Button variant="outline" className="h-24 flex-col gap-2" asChild>
                 <Link href="/dashboard/business/create">
                   <UploadCloud className="h-6 w-6" />
