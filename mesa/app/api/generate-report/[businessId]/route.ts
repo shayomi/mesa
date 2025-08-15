@@ -3,13 +3,13 @@ import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/database";
 import Business from "@/lib/database/models/business.model";
 import { saveReport } from "@/lib/actions/report.action";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY! });
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { businessId: string } }
 ) {
   try {
@@ -18,13 +18,10 @@ export async function POST(
 
     await connectToDatabase();
 
-    // Await the params object before destructuring
-
-    const business = await Business.findById(
-      (
-        await params
-      ).businessId
-    ).populate("industry owner");
+    // ✅ No await here — params is synchronous
+    const business = await Business.findById(params.businessId).populate(
+      "industry owner"
+    );
     if (!business)
       return new NextResponse("Business not found", { status: 404 });
 
@@ -55,12 +52,7 @@ Challenges: ${business.painPoint || "N/A"}
       content,
     });
 
-    return new NextResponse(JSON.stringify({ title, content }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return NextResponse.json({ title, content });
   } catch (error) {
     console.error("Error generating report:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
