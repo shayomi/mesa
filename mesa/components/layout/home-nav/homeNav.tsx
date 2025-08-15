@@ -26,7 +26,7 @@ const HomeNav = () => {
         {/* Middle: Desktop Nav */}
         <div className="hidden lg:flex items-center gap-8 text-secondary">
           {["About", "Blog", "Contact"].map((item) => (
-            <Link key={item} href={`/${item.toLowerCase()}`}>
+            <Link key={item} href="/">
               <Typography
                 variant="smallText"
                 className="font-bold text-secondary hover:text-primary transition-colors"

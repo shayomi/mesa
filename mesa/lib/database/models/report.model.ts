@@ -1,9 +1,8 @@
-// models/report.model.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IReport extends Document {
   userId: string;
-
+  business: string; // add this
   title: string;
   content: string;
   type: "manual" | "scheduled";
@@ -14,7 +13,7 @@ export interface IReport extends Document {
 const ReportSchema = new Schema<IReport>(
   {
     userId: { type: String, required: true, index: true },
-
+    business: { type: String, required: true, index: true }, // link to business
     title: { type: String, required: true },
     content: { type: String, required: true },
     type: { type: String, enum: ["manual", "scheduled"], default: "manual" },

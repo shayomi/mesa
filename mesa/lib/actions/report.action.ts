@@ -9,19 +9,23 @@ import { DeleteReportParams } from "@/types";
 // Save new report
 export async function saveReport({
   userId,
+  businessId, // ← add this
   title,
   content,
 }: {
   userId: string;
+  businessId?: string; // optional if some reports aren’t tied to a business
   title: string;
   content?: string;
 }): Promise<IReport> {
   const newReport = new Report({
     userId,
+    business: businessId, // ← link report to business
     title,
     content,
     createdAt: new Date(),
   });
+
   return newReport.save();
 }
 
@@ -44,4 +48,16 @@ export async function deleteReport({ reportId, path }: DeleteReportParams) {
   } catch (error) {
     handleError(error);
   }
+}
+
+export async function getReportsByBusinessId(businessId: string) {
+  const reports = await Report.find({ business: businessId })
+    .sort({ createdAt: -1 })
+    .limit(5);
+  return reports.map((r) => ({
+    id: r._id.toString(),
+    title: r.title,
+    createdAt: r.createdAt,
+    url: r.url, // or any download link
+  }));
 }
