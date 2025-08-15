@@ -11,21 +11,21 @@ const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY! });
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ businessId: string }> }
-) {
+): Promise<NextResponse> {
   try {
     const { userId } = await auth();
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     await connectToDatabase();
 
-    // ✅ No await here — params is synchronous
-    const business = await Business.findById(
-      (
-        await params
-      ).businessId
-    ).populate("industry owner");
-    if (!business)
+    const { businessId } = await params;
+
+    const business = await Business.findById(businessId).populate(
+      "industry owner"
+    );
+    if (!business) {
       return new NextResponse("Business not found", { status: 404 });
+    }
 
     const prompt = `
 Generate a comprehensive market expansion strategy report for the following company...
@@ -44,7 +44,7 @@ Challenges: ${business.painPoint || "N/A"}
     });
 
     const content =
-      aiResponse.choices[0].message.content || "No content generated.";
+      aiResponse.choices[0].message?.content || "No content generated.";
     const title = `Market Expansion Strategy for ${business.businessName}`;
 
     await saveReport({
