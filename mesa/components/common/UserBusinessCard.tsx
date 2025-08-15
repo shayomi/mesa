@@ -60,7 +60,10 @@ export const UserBusinessCard = ({ business }: BusinessCardProps) => {
             className="h-full mt-6"
             href={`/dashboard/business/${business._id}`}
           >
-            <Button variant="default" className="bg-blue-200 text-blue-800">
+            <Button
+              variant="default"
+              className="bg-blue-200 hover:bg-blue-800 hover:text-white text-blue-800"
+            >
               View details
             </Button>{" "}
           </Link>
