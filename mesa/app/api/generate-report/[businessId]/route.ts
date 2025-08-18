@@ -9,27 +9,36 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY! });
 
-// Define your own type for params
 interface Params {
   businessId: string;
 }
 
 export async function POST(req: NextRequest, context: any) {
+  console.log("Received request to generate report");
+
   try {
     const { userId } = await auth();
-    if (!userId) return new NextResponse("Unauthorized", { status: 401 });
+    console.log("Authenticated userId:", userId);
+    if (!userId) {
+      console.warn("Unauthorized access attempt");
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
+    console.log("Connecting to database...");
     await connectToDatabase();
+    console.log("Database connected");
 
-    // Cast context to your own type
     const { businessId } = (context as { params: Params }).params;
+    console.log("Fetching business with ID:", businessId);
 
     const business = await Business.findById(businessId).populate(
       "industry owner"
     );
     if (!business) {
+      console.warn("Business not found:", businessId);
       return new NextResponse("Business not found", { status: 404 });
     }
+    console.log("Business found:", business.businessName);
 
     const prompt = `
 Generate a comprehensive market expansion strategy report for the following company...
@@ -41,7 +50,9 @@ Products/Services: ${business.description}
 Business Goals: ${business.goals || "N/A"}
 Challenges: ${business.painPoint || "N/A"}
     `;
+    console.log("Prompt prepared for AI:", prompt);
 
+    console.log("Calling OpenAI API...");
     const aiResponse = await openai.chat.completions.create({
       model: "gpt-4.1",
       messages: [{ role: "user", content: prompt }],
@@ -49,7 +60,10 @@ Challenges: ${business.painPoint || "N/A"}
 
     const content =
       aiResponse.choices[0].message?.content || "No content generated.";
+    console.log("AI response received");
+
     const title = `Market Expansion Strategy for ${business.businessName}`;
+    console.log("Saving report to database...");
 
     await saveReport({
       userId,
@@ -58,6 +72,7 @@ Challenges: ${business.painPoint || "N/A"}
       content,
     });
 
+    console.log("Report saved successfully");
     return NextResponse.json({ title, content });
   } catch (error) {
     console.error("Error generating report:", error);
