@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/api/generate-report/[businessId]/route.ts
 import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/database";
@@ -6,19 +7,22 @@ import { saveReport } from "@/lib/actions/report.action";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+const openai = new OpenAI({ apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY! });
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ businessId: string }> }
-): Promise<NextResponse> {
+// Define your own type for params
+interface Params {
+  businessId: string;
+}
+
+export async function POST(req: NextRequest, context: any) {
   try {
     const { userId } = await auth();
     if (!userId) return new NextResponse("Unauthorized", { status: 401 });
 
     await connectToDatabase();
 
-    const { businessId } = await params;
+    // Cast context to your own type
+    const { businessId } = (context as { params: Params }).params;
 
     const business = await Business.findById(businessId).populate(
       "industry owner"
