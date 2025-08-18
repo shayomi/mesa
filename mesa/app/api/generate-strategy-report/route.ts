@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import { auth } from "@clerk/nextjs/server";
 import { connectToDatabase } from "@/lib/database";
-import { saveReport } from "@/lib/actions/report.action";
+import { saveGeneralReport } from "@/lib/actions/report.action";
 
 const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
@@ -68,7 +68,7 @@ Respond in Markdown-like format with clear headings and spacing.
   const createdAt = new Date().toISOString();
 
   // Save to DB
-  await saveReport({ userId, title: reportTitle, content });
+  await saveGeneralReport({ userId, title: reportTitle, content });
 
   return NextResponse.json({
     title: reportTitle,

@@ -5,27 +5,48 @@ import Report, { IReport } from "../database/models/report.model";
 import { connectToDatabase } from "../database";
 import { handleError } from "../utils";
 import { DeleteReportParams } from "@/types";
+import GeneralReport, {
+  IGeneralReport,
+} from "../database/models/generalReport";
 
 // Save new report
 export async function saveReport({
   userId,
-  businessId, // ← add this
+  businessId,
   title,
   content,
 }: {
   userId: string;
-  businessId?: string; // optional if some reports aren’t tied to a business
+  businessId: string;
   title: string;
   content?: string;
 }): Promise<IReport> {
   const newReport = new Report({
     userId,
-    business: businessId, // ← link report to business
+    business: businessId,
     title,
     content,
     createdAt: new Date(),
   });
+  return newReport.save();
+}
 
+// Save General Report
+export async function saveGeneralReport({
+  userId,
+  title,
+  content,
+}: {
+  userId: string;
+  title: string;
+  content?: string;
+}): Promise<IGeneralReport> {
+  const newReport = new GeneralReport({
+    userId,
+    title,
+    content,
+    createdAt: new Date(),
+  });
   return newReport.save();
 }
 
