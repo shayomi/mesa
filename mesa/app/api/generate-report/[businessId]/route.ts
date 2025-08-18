@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // app/api/generate-report/[businessId]/route.ts
 import { auth } from "@clerk/nextjs/server";
@@ -13,10 +14,7 @@ interface Params {
   businessId: string;
 }
 
-export async function POST(
-  req: NextRequest,
-  context: { params: { businessId: string } }
-) {
+export async function POST(req: NextRequest, { params }: any) {
   console.log("Received request to generate report");
 
   try {
@@ -28,7 +26,7 @@ export async function POST(
     await connectToDatabase();
     console.log("Database connected");
 
-    const { businessId } = context.params;
+    const { businessId } = await params;
     console.log("Fetching business with ID:", businessId);
 
     const business = await Business.findById(businessId).populate(
