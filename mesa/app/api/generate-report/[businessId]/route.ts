@@ -29,9 +29,7 @@ export async function POST(req: NextRequest, { params }: any) {
     const { businessId } = await params;
     console.log("Fetching business with ID:", businessId);
 
-    const business = await Business.findById(businessId).populate(
-      "industry owner"
-    );
+    const business = await Business.findById(businessId).populate("owner");
     if (!business)
       return new NextResponse("Business not found", { status: 404 });
     console.log("Business found:", business.businessName);
@@ -39,7 +37,6 @@ export async function POST(req: NextRequest, { params }: any) {
     const prompt = `
 Generate a comprehensive market expansion strategy report for the following company...
 Company Name: ${business.businessName}
-Industry: ${business.industry?.name}
 Current Market: ${business.location}
 Target Markets: ${business.targetMarket?.join(", ") || "N/A"}
 Products/Services: ${business.description}
