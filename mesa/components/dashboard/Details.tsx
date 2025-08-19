@@ -41,7 +41,7 @@ export default async function DashboardSection({ params }: PageProps) {
   const response = await getBusinessByUser({ userId, page: 1 });
   const businesses = response?.data ?? [];
 
-  const reports = await getReportsByBusinessId(params.id);
+  const reports = await getReportsByBusinessId((await params).id);
 
   return (
     <section className="p-0">
