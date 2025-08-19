@@ -8,7 +8,7 @@ export default function DashboardHeader() {
   const { user } = useUser();
 
   return (
-    <div className="px-6">
+    <div className="mb-6">
       <div className="flex flex-row justify-between gap-4">
         <Typography variant="h4" className="text-black/70 font-medium">
           Hello{" "}

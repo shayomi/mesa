@@ -29,17 +29,23 @@ import { UserBusinessCard } from "../common/UserBusinessCard";
 import { Typography } from "../ui/typography";
 import Link from "next/link";
 import { GenerateReportDropdown } from "./GenerateReportDropdown";
+import { getReportsByBusinessId } from "@/lib/actions/report.action";
+interface PageProps {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
 
-export default async function DashboardSection() {
+export default async function DashboardSection({ params }: PageProps) {
   const { sessionClaims } = await auth();
   const userId = (sessionClaims as unknown as { userId: string })?.userId;
   const response = await getBusinessByUser({ userId, page: 1 });
   const businesses = response?.data ?? [];
 
+  const reports = await getReportsByBusinessId(params.id);
+
   return (
-    <section className="p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+    <section className="p-0">
+      <div className="flex flex-col md:flex-row gap-3 items-start justify-between md:items-center mb-8">
         <div>
           <Typography variant="h2" className="font-bold text-gray-900">
             Dashboard Overview
@@ -55,9 +61,108 @@ export default async function DashboardSection() {
           </Link>
         </Button>
       </div>
+      {/* Businesses Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-gray-700" />
+              Your Businesses
+            </CardTitle>
+            <CardDescription>
+              {businesses.length} registered businesses
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {businesses.length > 0 ? (
+              <div className="flex flex-col md:flex-row flex-wrap items-start gap-4">
+                {businesses.map((business: any) => (
+                  <UserBusinessCard key={business._id} business={business} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                title="No businesses yet"
+                description="Get started by adding your first business"
+                actionText="Add Business"
+                actionHref="/business/new"
+              />
+            )}
+          </CardContent>
+          {businesses.length > 0 && (
+            <CardFooter className="border-t pt-4">
+              <Button variant="ghost" className="text-primary" asChild>
+                <Link href="/dashboard/business-list">
+                  View all businesses <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardFooter>
+          )}
+        </Card>
+        {/* Quick Actions */}
+        <div className="flex flex-col">
+          <Card className="border-0 shadow-sm">
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3">
+              <GenerateReportDropdown />
+              <Button variant="outline" className="h-24 flex-col gap-2" asChild>
+                <Link href="/dashboard/business/create">
+                  <UploadCloud className="h-6 w-6" />
+                  Add Business
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card className="border-0 shadow-sm mt-4">
+            <CardHeader>
+              <CardTitle>Most Recent Reports</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {reports.length === 0 ? (
+                <p className="p-4 text-muted-foreground">
+                  No recent reports for now
+                </p>
+              ) : (
+                reports
+                  .sort(
+                    (a: any, b: any) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime()
+                  )
+                  .slice(0, 3)
+                  .map((report: any) => (
+                    <div
+                      key={report.id}
+                      className="p-4 flex flex-col md:flex-row gap-4 items-start justify-between lg:items-end hover:bg-gray-50 border-t first:border-t-0"
+                    >
+                      <div>
+                        <p className="font-medium">{report.title}</p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          {new Date(report.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-2 mt-3 md:mt-0">
+                        <Link href={`/dashboard/reports/${report.id}`}>
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                        </Link>
+                        <Button variant="default" size="sm">
+                          Download
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-12">
         {/* Left Column - Stats & Businesses */}
         <div className="lg:col-span-8 space-y-6">
           {/* Stats Cards */}
@@ -91,44 +196,6 @@ export default async function DashboardSection() {
               color="bg-pink-50"
             />
           </div>
-
-          {/* Businesses Section */}
-          <Card className="border-0 shadow-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-gray-700" />
-                Your Businesses
-              </CardTitle>
-              <CardDescription>
-                {businesses.length} registered businesses
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {businesses.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {businesses.map((business: any) => (
-                    <UserBusinessCard key={business._id} business={business} />
-                  ))}
-                </div>
-              ) : (
-                <EmptyState
-                  title="No businesses yet"
-                  description="Get started by adding your first business"
-                  actionText="Add Business"
-                  actionHref="/business/new"
-                />
-              )}
-            </CardContent>
-            {businesses.length > 0 && (
-              <CardFooter className="border-t pt-4">
-                <Button variant="ghost" className="text-primary" asChild>
-                  <Link href="/dashboard/business-list">
-                    View all businesses <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </CardFooter>
-            )}
-          </Card>
         </div>
 
         {/* Right Column - Actions & Upgrade */}
@@ -162,22 +229,6 @@ export default async function DashboardSection() {
                 Upgrade Now
               </Button>
             </CardFooter>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="border-0 shadow-sm">
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-3">
-              <GenerateReportDropdown />
-              <Button variant="outline" className="h-24 flex-col gap-2" asChild>
-                <Link href="/dashboard/business/create">
-                  <UploadCloud className="h-6 w-6" />
-                  Add Business
-                </Link>
-              </Button>
-            </CardContent>
           </Card>
 
           {/* Recent Activity */}

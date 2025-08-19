@@ -26,8 +26,8 @@ export async function EmptyState({
   const businesses = response?.data ?? [];
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
+    <div className="">
+      <div className="flex flex-col md:flex-row gap-4 items-start justify-between md:items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Your Businesses</h1>
           <p className="text-gray-500">Manage all your registered businesses</p>
