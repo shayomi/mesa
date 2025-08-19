@@ -1,11 +1,16 @@
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSection from "@/components/dashboard/Details";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id;
   return (
     <div className="min-h-full">
       <DashboardHeader />
-      <DashboardSection params={params} />
+      <DashboardSection id={id} />
     </div>
   );
 }

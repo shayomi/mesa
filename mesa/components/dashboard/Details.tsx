@@ -35,13 +35,13 @@ interface PageProps {
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default async function DashboardSection({ params }: PageProps) {
+export default async function DashboardSection({ id }: { id: string }) {
   const { sessionClaims } = await auth();
   const userId = (sessionClaims as unknown as { userId: string })?.userId;
   const response = await getBusinessByUser({ userId, page: 1 });
   const businesses = response?.data ?? [];
 
-  const reports = await getReportsByBusinessId((await params).id);
+  const reports = await getReportsByBusinessId(id);
 
   return (
     <section className="p-0">
